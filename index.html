@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LudusCog · ¿Aprender jugando con tus propios textos?</title>
+  <meta name="description" content="Una encuesta corta (6–8 min) con un juego de prueba. Anónima y voluntaria." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --fondo: #0A1230; --panel: #141f4a; --hundido: #0f1839; --borde: #2a3a6e;
+      --texto: #EDE7DA; --texto2: #B7C2E0; --acento: #FF6A1A; --ok: #45b98a; --amarillo: #e8c64f;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--fondo); }
+    body { margin: 0; font-family: Manrope, system-ui, sans-serif; color: var(--texto); background: var(--fondo) radial-gradient(ellipse 90% 60% at 50% 0%, #182660, var(--fondo) 70%); min-height: 100dvh; }
+    .app { max-width: 620px; margin: 0 auto; padding: 16px 16px 48px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0 14px; }
+    .marca { font-weight: 800; letter-spacing: .01em; }
+    .marca span { color: var(--acento); }
+    .progreso { height: 6px; background: var(--hundido); border-radius: 99px; overflow: hidden; margin-bottom: 18px; }
+    .progreso i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--acento), #ffb36b); transition: width .35s ease; }
+    .paso { background: var(--panel); border: 1px solid var(--borde); border-radius: 16px; padding: 20px 18px; animation: entrar .25s ease-out; }
+    @keyframes entrar { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    h1 { font-size: 26px; line-height: 1.2; margin: 0 0 10px; }
+    h2 { font-size: 19px; line-height: 1.3; margin: 0 0 6px; }
+    p { margin: 0 0 12px; line-height: 1.5; color: var(--texto2); }
+    .eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--acento); font-weight: 800; margin-bottom: 8px; display: block; }
+    .pregunta { margin: 18px 0 6px; font-weight: 800; font-size: 16px; line-height: 1.35; color: var(--texto); }
+    .pregunta small { display: block; font-weight: 500; color: var(--texto2); font-size: 13px; margin-top: 2px; }
+    .opciones { display: flex; flex-direction: column; gap: 8px; }
+    .opcion { display: flex; align-items: center; gap: 12px; background: var(--hundido); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 14px; cursor: pointer; font-size: 15px; line-height: 1.3; transition: border-color .15s, background .15s; }
+    .opcion:hover { border-color: #4c63b0; }
+    .opcion.activa { border-color: var(--acento); background: rgba(255, 106, 26, .12); }
+    .opcion i { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--borde); flex: none; display: grid; place-items: center; }
+    .opcion.multi i { border-radius: 6px; }
+    .opcion.activa i { border-color: var(--acento); background: var(--acento); }
+    .opcion.activa i::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #0A1230; }
+    .opcion.multi.activa i::after { border-radius: 2px; }
+    .escala { display: flex; gap: 6px; }
+    .escala button { flex: 1; min-height: 46px; border-radius: 10px; border: 1px solid var(--borde); background: var(--hundido); color: var(--texto); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+    .escala button.activa { border-color: var(--acento); background: var(--acento); color: #0A1230; }
+    .escala-pies { display: flex; justify-content: space-between; font-size: 12px; color: var(--texto2); margin-top: 4px; }
+    .escala.diez button { min-height: 40px; font-size: 14px; padding: 0; }
+    input[type=text], input[type=email], input[type=number], textarea { width: 100%; background: var(--hundido); border: 1px solid var(--borde); border-radius: 12px; color: var(--texto); font: inherit; font-size: 15px; padding: 12px 14px; }
+    textarea { min-height: 84px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent; }
+    .cop { position: relative; }
+    .cop input { padding-right: 90px; }
+    .cop span { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--texto2); }
+    .botones { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-top: 22px; }
+    .btn { font: inherit; font-weight: 800; font-size: 16px; border-radius: 12px; padding: 13px 22px; border: 1px solid var(--borde); background: var(--hundido); color: var(--texto); cursor: pointer; }
+    .btn.primario { background: var(--acento); color: #0A1230; border-color: var(--acento); box-shadow: 0 6px 20px rgba(255, 106, 26, .35); }
+    .btn.primario:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+    .btn.fantasma { background: transparent; }
+    .btn.grande { width: 100%; font-size: 17px; padding: 15px 22px; }
+    .aviso { font-size: 13px; color: var(--texto2); background: var(--hundido); border: 1px dashed var(--borde); border-radius: 12px; padding: 10px 12px; }
+    .error { color: #ff9b94; font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .juego { position: relative; border-radius: 14px; overflow: hidden; border: 2px solid var(--acento); background: #000; aspect-ratio: 16 / 10; }
+    .juego iframe { width: 100%; height: 100%; border: 0; display: block; }
+    .listo { display: flex; align-items: center; gap: 10px; background: rgba(69, 185, 138, .15); border: 1px solid var(--ok); border-radius: 12px; padding: 12px 14px; font-weight: 800; }
+    .andy { width: 120px; height: 120px; image-rendering: pixelated; display: block; margin: 0 auto 8px; }
+    .centro { text-align: center; }
+    .pie { text-align: center; font-size: 12px; color: var(--texto2); opacity: .7; margin-top: 18px; }
+    .oculto { display: none !important; }
+    @media (min-width: 900px) { .app { max-width: 720px; } .juego { aspect-ratio: 16 / 10; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <span class="marca">Ludus<span>Cog</span></span>
+      <span id="contador" style="font-size:12px;color:var(--texto2)"></span>
+    </header>
+    <div class="progreso"><i id="barra"></i></div>
+    <main id="paso" class="paso"></main>
+    <p class="pie">Encuesta anónima y voluntaria · Universidad de La Sabana · LudusCog</p>
+  </div>
+
+<script src="config.js"></script>
+<script>
+(() => {
+  const CFG = window.ENCUESTA_CONFIG || {}
+  const canal = new URLSearchParams(location.search).get('c') || 'directo'
+  const esMovil = window.matchMedia('(max-width: 899px)').matches || /Android|iPhone|iPad/i.test(navigator.userAgent)
+  const inicio = Date.now()
+  const R = {}           // respuestas por clave
+  let tutorialHecho = false
+  let paso = 0
+
+  const ROL = (r) => R.rol || ''
+  const esDocente = () => /Docente|Coordinador/.test(ROL())
+  const esEstudiante = () => /Estudiante/.test(ROL())
+
+  /* ---------- definición de pasos ---------- */
+  const PASOS = [
+    { id: 'intro', render: (el) => {
+        el.innerHTML = `
+          <img class="andy" src="andy.png" alt="" />
+          <h1 class="centro">¿Aprender jugando con tus propios textos?</h1>
+          <p class="centro">Estamos creando <b>LudusCog</b>, un juego que convierte cualquier lectura (un PDF, unas diapositivas) en partidas para entenderla y recordarla. Queremos saber si te sería útil de verdad.</p>
+          <div class="aviso">Son unas 10 preguntas y una prueba del juego de 4 minutos. Es <b>anónima y voluntaria</b>; solo pedimos tu correo al final si quieres que te contactemos.</div>
+          <div class="botones"><span></span><button class="btn primario grande" data-sig>Empezar</button></div>` },
+      ok: () => true },
+
+    { id: 'rol', render: (el) => {
+        el.innerHTML = `<span class="eyebrow">1 · Sobre ti</span>
+          ${unica('rol', '¿Cuál es tu rol?', ['Estudiante de colegio', 'Estudiante de educación superior', 'Docente de colegio', 'Docente de educación superior', 'Coordinador, rector o directivo', 'Padre o madre', 'Otro'])}
+          <div id="rol_otro" class="${R.rol === 'Otro' ? '' : 'oculto'}" style="margin-top:8px"><input type="text" placeholder="¿Cuál?" value="${esc(R.rol_otro || '')}" oninput="R_set('rol_otro', this.value)"></div>
+          ${unica('frecuencia', '¿Con qué frecuencia usas herramientas digitales para estudiar o enseñar?', ['Casi nunca', 'Algunas veces al mes', 'Varias veces por semana', 'A diario'])}
+          ${unica('tiempo', esDocenteTexto() ? '¿Cuánto tiempo dedicas por semana a preparar clases?' : '¿Cuánto tiempo dedicas por semana a estudiar fuera de clase?', ['Menos de 2 horas', 'Entre 2 y 5 horas', 'Entre 5 y 10 horas', 'Más de 10 horas'])}
+          ${botones()}` },
+      ok: () => R.rol && R.frecuencia && R.tiempo },
+
+    { id: 'dolor', render: (el) => {
+        el.innerHTML = `<span class="eyebrow">2 · Cómo es hoy</span>
+          ${multiple('dificil', esDocente() ? '¿Qué es lo más difícil de lograr con tus estudiantes y un texto largo?' : '¿Qué es lo más difícil cuando estudias un texto largo?', esDocente()
+            ? ['Que lo lean completo', 'Que lo entiendan', 'Que lo recuerden después', 'Que relacionen las ideas', 'Saber quién entendió y quién no', 'Que se motiven']
+            : ['Entenderlo', 'Recordarlo después', 'Concentrarme', 'Saber si de verdad lo entendí', 'Relacionar las ideas entre sí', 'Encontrar la motivación'], 'Marca hasta tres')}
+          ${unica('pago', '¿Pagas actualmente por alguna herramienta digital para aprender o enseñar?', ['Sí, yo pago', 'No, uso solo versiones gratuitas', 'La paga mi institución'])}
+          <div id="pago_cuanto" class="${R.pago === 'Sí, yo pago' ? '' : 'oculto'}">
+            ${unica('pago_monto', '¿Cuánto pagas al mes, en total, aproximadamente?', ['Menos de 20.000 COP', 'Entre 20.000 y 50.000 COP', 'Entre 50.000 y 100.000 COP', 'Más de 100.000 COP'])}
+          </div>
+          ${botones()}` },
+      ok: () => (R.dificil || []).length > 0 && R.pago && (R.pago !== 'Sí, yo pago' || R.pago_monto) },
+
+    { id: 'jugar', render: (el) => {
+        const url = CFG.JUEGO_URL || '#'
+        el.innerHTML = `<span class="eyebrow">3 · Pruébalo</span>
+          <h2>Juega el tutorial (unos 4 minutos)</h2>
+          <p>Andy te va guiando paso a paso. Cuando termines, vuelve aquí para contarnos cómo te fue.</p>
+          <div id="juego_zona">
+            ${esMovil
+              ? `<a class="btn primario grande" style="display:block;text-align:center;text-decoration:none" href="${url}" target="luduscog_demo" rel="opener">Abrir el juego</a>
+                 <p style="margin-top:10px;font-size:13px">Se abre en otra pestaña. Al terminar, pulsa «Volver a la encuesta» en el juego o regresa a esta pestaña.</p>`
+              : `<div class="juego"><iframe src="${url}" allow="autoplay" title="Tutorial de LudusCog"></iframe></div>`}
+          </div>
+          <div id="juego_listo" class="listo ${tutorialHecho ? '' : 'oculto'}" style="margin-top:12px">✓ ¡Tutorial completado! Ya puedes seguir.</div>
+          <div class="botones">
+            <button class="btn fantasma" data-ant>Atrás</button>
+            <span style="display:flex;gap:8px;align-items:center">
+              <button class="btn fantasma" id="saltar" style="font-size:13px">No pude jugar</button>
+              <button class="btn primario" data-sig ${tutorialHecho ? '' : 'disabled'}>Seguir</button>
+            </span>
+          </div>`
+        el.querySelector('#saltar').onclick = () => { R.jugo = 'no'; R.tutorial_completado = false; irA(paso + 1) }
+      },
+      ok: () => tutorialHecho },
+
+    { id: 'despues', render: (el) => {
+        const jugo = tutorialHecho
+        el.innerHTML = `<span class="eyebrow">4 · Después de jugar</span>
+          ${jugo ? '' : `${unica('porque_no_jugo', '¿Por qué no pudiste jugar?', ['No cargó', 'No entendí cómo empezar', 'No tuve tiempo', 'No me interesó'])}`}
+          ${jugo ? escala('entendi', '¿Entendiste qué tenías que hacer?', 'Nada', 'Perfectamente') : ''}
+          ${jugo ? escala('divertido', '¿Qué tan divertido te pareció?', 'Nada', 'Mucho') : ''}
+          ${jugo ? escala('aprendi', '¿Sentiste que aprendías mientras jugabas?', 'Nada', 'Mucho') : ''}
+          ${escala('util', esDocente() ? 'Con tus propios materiales, ¿qué tan útil sería para tu clase?' : 'Con tus propios textos y materias, ¿qué tan útil te sería?', 'Nada útil', 'Muy útil')}
+          ${unica('usaria', esDocente() ? '¿La usarías en tu clase o institución?' : '¿La usarías para estudiar tus materias?', ['Sí', 'Tal vez', 'No'])}
+          ${botones()}` },
+      ok: () => R.util && R.usaria && (tutorialHecho ? R.entendi && R.divertido && R.aprendi : R.porque_no_jugo) },
+
+    { id: 'abiertas', render: (el) => {
+        el.innerHTML = `<span class="eyebrow">5 · Con tus palabras</span>
+          <div class="pregunta">¿Qué te confundió o no te gustó? <small>Opcional, corto</small></div>
+          <textarea oninput="R_set('no_gusto', this.value)">${esc(R.no_gusto || '')}</textarea>
+          <div class="pregunta">¿Qué fue lo que más te gustó o te llamó la atención? <small>Opcional, corto</small></div>
+          <textarea oninput="R_set('gusto', this.value)">${esc(R.gusto || '')}</textarea>
+          ${escalaDiez('recomendaria', esDocente() ? '¿Se la recomendarías a un colega?' : '¿Se la recomendarías a un compañero?')}
+          ${botones()}` },
+      ok: () => R.recomendaria !== undefined },
+
+    { id: 'precio', render: (el) => {
+        el.innerHTML = `<span class="eyebrow">6 · Precio</span>
+          <p>Piensa en una suscripción mensual que te deje usar el juego con todos tus textos. Responde en pesos colombianos; si no sabes, deja en blanco.</p>
+          ${cop('precio_bueno', '¿Qué precio mensual te parecería una buena oferta?')}
+          ${cop('precio_caro', '¿A partir de qué precio mensual te empezaría a parecer cara, aunque aún la considerarías?')}
+          ${cop('precio_demasiado', '¿A qué precio mensual te parecería demasiado cara y no la comprarías?')}
+          ${unica('forma_pago', '¿Cómo preferirías pagar?', ['Suscripción mensual', 'Pago por semestre', 'Paquete por materia o curso', 'Que pague mi institución'])}
+          ${esDocente() ? unica('decide', '¿Quién decide la compra de herramientas digitales en tu institución?', ['Yo mismo', 'Coordinación académica', 'Rectoría o dirección', 'Un comité o área de tecnología', 'No sé']) : ''}
+          ${botones()}` },
+      ok: () => R.forma_pago && (!esDocente() || R.decide) },
+
+    { id: 'confianza', render: (el) => {
+        el.innerHTML = `<span class="eyebrow">7 · Para terminar</span>
+          ${multiple('confianza', '¿Qué te daría más confianza para probar una herramienta así?', esDocente()
+            ? ['Prueba gratuita', 'Evidencia de resultados de aprendizaje', 'Aval de una institución o universidad', 'Que otros docentes la usen', 'Capacitación y acompañamiento', 'Que se integre con lo que ya uso (Moodle, Classroom…)']
+            : ['Prueba gratuita', 'Recomendación de un profesor', 'Aval de una institución', 'Ver resultados de otros estudiantes', 'Que mis amigos la usen'], 'Marca las que quieras')}
+          <div class="pregunta">¿Quieres que te contactemos para una prueba piloto? <small>Opcional. Tu correo solo se usará para eso y no se comparte.</small></div>
+          <input type="email" placeholder="tu@correo.com" value="${esc(R.correo || '')}" oninput="R_set('correo', this.value)">
+          <div class="error" id="error"></div>
+          <div class="botones"><button class="btn fantasma" data-ant>Atrás</button><button class="btn primario" data-sig id="enviar">Enviar respuestas</button></div>` },
+      ok: () => (R.confianza || []).length > 0 },
+
+    { id: 'gracias', render: (el) => {
+        el.innerHTML = `<img class="andy" src="andy.png" alt="" />
+          <h1 class="centro">¡Gracias!</h1>
+          <p class="centro">Tus respuestas nos ayudan a decidir qué construir. ${R.correo ? 'Te escribiremos cuando abramos la prueba piloto.' : ''}</p>
+          <p class="centro" style="font-size:13px">Si conoces a alguien a quien le pueda servir, compártele este enlace.</p>
+          <div class="botones"><span></span><button class="btn primario" onclick="navigator.share ? navigator.share({ title: 'LudusCog', url: location.origin + location.pathname }) : navigator.clipboard.writeText(location.origin + location.pathname).then(() => alert('Enlace copiado'))">Compartir</button></div>` },
+      ok: () => true, final: true }
+  ]
+
+  /* ---------- piezas de interfaz ---------- */
+  function esc(t) { return String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+  function esDocenteTexto() { return esDocente() }
+  function unica(clave, texto, ops, nota) {
+    return `<div class="pregunta">${texto}${nota ? `<small>${nota}</small>` : ''}</div><div class="opciones">${ops.map((o) =>
+      `<div class="opcion${R[clave] === o ? ' activa' : ''}" data-unica="${clave}" data-v="${esc(o)}"><i></i>${o}</div>`).join('')}</div>`
+  }
+  function multiple(clave, texto, ops, nota) {
+    const sel = R[clave] || []
+    return `<div class="pregunta">${texto}${nota ? `<small>${nota}</small>` : ''}</div><div class="opciones">${ops.map((o) =>
+      `<div class="opcion multi${sel.includes(o) ? ' activa' : ''}" data-multi="${clave}" data-v="${esc(o)}"><i></i>${o}</div>`).join('')}</div>`
+  }
+  function escala(clave, texto, a, b) {
+    return `<div class="pregunta">${texto}</div><div class="escala">${[1, 2, 3, 4, 5].map((n) =>
+      `<button type="button" class="${R[clave] === n ? 'activa' : ''}" data-escala="${clave}" data-v="${n}">${n}</button>`).join('')}</div><div class="escala-pies"><span>${a}</span><span>${b}</span></div>`
+  }
+  function escalaDiez(clave, texto) {
+    return `<div class="pregunta">${texto}<small>0 = para nada · 10 = sin duda</small></div><div class="escala diez">${Array.from({ length: 11 }, (_, n) =>
+      `<button type="button" class="${R[clave] === n ? 'activa' : ''}" data-escala="${clave}" data-v="${n}">${n}</button>`).join('')}</div>`
+  }
+  function cop(clave, texto) {
+    return `<div class="pregunta">${texto}</div><div class="cop"><input type="number" inputmode="numeric" min="0" step="1000" placeholder="Ej. 15000" value="${R[clave] ?? ''}" oninput="R_set('${clave}', this.value ? Number(this.value) : undefined)"><span>COP / mes</span></div>`
+  }
+  function botones() { return `<div class="botones"><button class="btn fantasma" data-ant>Atrás</button><button class="btn primario" data-sig>Seguir</button></div>` }
+  window.R_set = (k, v) => { R[k] = v }
+
+  /* ---------- navegación ---------- */
+  const cont = document.getElementById('paso')
+  function pintar() {
+    const p = PASOS[paso]
+    cont.innerHTML = ''
+    p.render(cont)
+    document.getElementById('barra').style.width = `${Math.round((paso / (PASOS.length - 1)) * 100)}%`
+    document.getElementById('contador').textContent = paso > 0 && !p.final ? `Paso ${paso} de ${PASOS.length - 2}` : ''
+    cont.querySelectorAll('[data-unica]').forEach((el) => el.onclick = () => {
+      R[el.dataset.unica] = el.dataset.v
+      if (el.dataset.unica === 'rol' || el.dataset.unica === 'pago') pintar()
+      else { cont.querySelectorAll(`[data-unica="${el.dataset.unica}"]`).forEach((x) => x.classList.toggle('activa', x === el)) }
+    })
+    cont.querySelectorAll('[data-multi]').forEach((el) => el.onclick = () => {
+      const k = el.dataset.multi, v = el.dataset.v
+      const arr = R[k] || []
+      R[k] = arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
+      el.classList.toggle('activa')
+    })
+    cont.querySelectorAll('[data-escala]').forEach((el) => el.onclick = () => {
+      R[el.dataset.escala] = Number(el.dataset.v)
+      cont.querySelectorAll(`[data-escala="${el.dataset.escala}"]`).forEach((x) => x.classList.toggle('activa', x === el))
+    })
+    cont.querySelectorAll('[data-ant]').forEach((el) => el.onclick = () => irA(paso - 1))
+    cont.querySelectorAll('[data-sig]').forEach((el) => el.onclick = () => {
+      if (!p.ok()) { sacudir(); return }
+      if (p.id === 'confianza') enviar(); else irA(paso + 1)
+    })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  function irA(n) { paso = Math.max(0, Math.min(PASOS.length - 1, n)); pintar() }
+  function sacudir() {
+    cont.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 260 })
+    const falta = cont.querySelector('.pregunta')
+    if (falta) falta.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  // el juego avisa cuando el tutorial termina (desde el iframe o desde la otra pestaña)
+  window.addEventListener('message', (ev) => {
+    if (ev.data && ev.data.tipo === 'luduscog-tutorial-fin') {
+      tutorialHecho = true; R.jugo = 'si'; R.tutorial_completado = true
+      if (PASOS[paso].id === 'jugar') pintar()
+    }
+  })
+
+  /* ---------- envío a Supabase ---------- */
+  async function enviar() {
+    const btn = document.getElementById('enviar'), err = document.getElementById('error')
+    btn.disabled = true; btn.textContent = 'Enviando…'; err.textContent = ''
+    const fila = {
+      canal, rol: R.rol === 'Otro' && R.rol_otro ? `Otro: ${R.rol_otro}` : R.rol,
+      respuestas: R, tutorial_completado: !!tutorialHecho,
+      segundos: Math.round((Date.now() - inicio) / 1000), dispositivo: esMovil ? 'movil' : 'escritorio'
+    }
+    try {
+      if (!CFG.SUPABASE_URL || CFG.SUPABASE_URL.includes('TU-PROYECTO')) throw new Error('Falta configurar Supabase en config.js')
+      const r = await fetch(`${CFG.SUPABASE_URL}/rest/v1/encuesta_respuestas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: CFG.SUPABASE_ANON_KEY, Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}`, Prefer: 'return=minimal' },
+        body: JSON.stringify(fila)
+      })
+      if (!r.ok) throw new Error(`Supabase respondió ${r.status}`)
+      try { localStorage.setItem('luduscog-encuesta', 'enviada') } catch {}
+      irA(paso + 1)
+    } catch (e) {
+      err.textContent = `No se pudo enviar (${e.message}). Revisa tu conexión e inténtalo de nuevo.`
+      btn.disabled = false; btn.textContent = 'Enviar respuestas'
+    }
+  }
+
+  pintar()
+})()
+</script>
+</body>
+</html>
