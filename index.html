@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LudusCog · ¿Aprender jugando con tus propios textos?</title>
+  <title>Lúcida · ¿Aprender jugando con tus propios textos?</title>
   <meta name="description" content="Una encuesta corta (6–8 min) con un juego de prueba. Anónima y voluntaria." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
@@ -70,12 +70,12 @@
 <body>
   <div class="app">
     <header>
-      <span class="marca">Ludus<span>Cog</span></span>
+      <span class="marca">Lúcida <small style="font-weight:500;color:var(--texto2);font-size:12px">· más claro, más lejos</small></span>
       <span id="contador" style="font-size:12px;color:var(--texto2)"></span>
     </header>
     <div class="progreso"><i id="barra"></i></div>
     <main id="paso" class="paso"></main>
-    <p class="pie">Encuesta anónima y voluntaria · Universidad de La Sabana · LudusCog</p>
+    <p class="pie">Encuesta anónima y voluntaria · Lúcida · más claro, más lejos</p>
   </div>
 
 <script src="config.js"></script>
@@ -99,7 +99,7 @@
         el.innerHTML = `
           <img class="andy" src="andy.png" alt="" />
           <h1 class="centro">¿Aprender jugando con tus propios textos?</h1>
-          <p class="centro">Estamos creando <b>LudusCog</b>, un juego que convierte cualquier lectura (un PDF, unas diapositivas) en partidas para entenderla y recordarla. Queremos saber si te sería útil de verdad.</p>
+          <p class="centro">Estamos creando <b>Lúcida</b>, un juego que convierte cualquier lectura (un PDF, unas diapositivas) en partidas para entenderla y recordarla. Queremos saber si te sería útil de verdad.</p>
           <div class="aviso">Son unas 10 preguntas y una prueba del juego de 4 minutos. Es <b>anónima y voluntaria</b>; solo pedimos tu correo al final si quieres que te contactemos.</div>
           <div class="botones"><span></span><button class="btn primario grande" data-sig>Empezar</button></div>` },
       ok: () => true },
@@ -134,7 +134,7 @@
             ${esMovil
               ? `<a class="btn primario grande" style="display:block;text-align:center;text-decoration:none" href="${url}" target="luduscog_demo" rel="opener">Abrir el juego</a>
                  <p style="margin-top:10px;font-size:13px">Se abre en otra pestaña. Al terminar, pulsa «Volver a la encuesta» en el juego o regresa a esta pestaña.</p>`
-              : `<div class="juego"><iframe src="${url}" allow="autoplay" title="Tutorial de LudusCog"></iframe></div>`}
+              : `<div class="juego"><iframe src="${url}" allow="autoplay" title="Tutorial de Lúcida"></iframe></div>`}
           </div>
           <div id="juego_listo" class="listo ${tutorialHecho ? '' : 'oculto'}" style="margin-top:12px">✓ ¡Tutorial completado! Ya puedes seguir.</div>
           <div class="botones">
@@ -197,7 +197,7 @@
           <h1 class="centro">¡Gracias!</h1>
           <p class="centro">Tus respuestas nos ayudan a decidir qué construir. ${R.correo ? 'Te escribiremos cuando abramos la prueba piloto.' : ''}</p>
           <p class="centro" style="font-size:13px">Si conoces a alguien a quien le pueda servir, compártele este enlace.</p>
-          <div class="botones"><span></span><button class="btn primario" onclick="navigator.share ? navigator.share({ title: 'LudusCog', url: location.origin + location.pathname }) : navigator.clipboard.writeText(location.origin + location.pathname).then(() => alert('Enlace copiado'))">Compartir</button></div>` },
+          <div class="botones"><span></span><button class="btn primario" onclick="navigator.share ? navigator.share({ title: 'Lúcida', url: location.origin + location.pathname }) : navigator.clipboard.writeText(location.origin + location.pathname).then(() => alert('Enlace copiado'))">Compartir</button></div>` },
       ok: () => true, final: true }
   ]
 
@@ -289,7 +289,7 @@
         body: JSON.stringify(fila)
       })
       if (!r.ok) throw new Error(`Supabase respondió ${r.status}`)
-      try { localStorage.setItem('luduscog-encuesta', 'enviada') } catch {}
+      try { localStorage.setItem('lucida-encuesta', 'enviada') } catch {}
       irA(paso + 1)
     } catch (e) {
       err.textContent = `No se pudo enviar (${e.message}). Revisa tu conexión e inténtalo de nuevo.`

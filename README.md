@@ -1,4 +1,4 @@
-# Encuesta LudusCog (empatizar)
+# Encuesta Lúcida (empatizar)
 
 Página estática: `index.html` + `config.js` + `andy.png`. No necesita build.
 
