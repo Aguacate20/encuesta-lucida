@@ -64,7 +64,12 @@
     .centro { text-align: center; }
     .pie { text-align: center; font-size: 12px; color: var(--texto2); opacity: .7; margin-top: 18px; }
     .oculto { display: none !important; }
-    @media (min-width: 900px) { .app { max-width: 720px; } .juego { aspect-ratio: 16 / 10; } }
+    @media (min-width: 900px) { .app { max-width: 720px; } }
+    /* el paso del juego se ensancha en escritorio: así el tutorial se ve en su versión de pantalla grande */
+    .app.ancho { max-width: min(1240px, 100vw - 32px); }
+    .app.ancho .juego { aspect-ratio: auto; height: min(78vh, 760px); min-height: 540px; }
+    .juego-acciones { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+    .juego-acciones a { font-size: 13px; color: var(--texto2); }
   </style>
 </head>
 <body>
@@ -83,7 +88,8 @@
 (() => {
   const CFG = window.ENCUESTA_CONFIG || {}
   const canal = new URLSearchParams(location.search).get('c') || 'directo'
-  const esMovil = window.matchMedia('(max-width: 899px)').matches || /Android|iPhone|iPad/i.test(navigator.userAgent)
+  // celular o tableta: por ancho de ventana o por navegador. Se vuelve a mirar en cada paso
+  const esMovil = () => window.matchMedia('(max-width: 899px)').matches || /Android|iPhone|iPad/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth < 1100)
   const inicio = Date.now()
   const R = {}           // respuestas por clave
   let tutorialHecho = false
@@ -131,10 +137,11 @@
           <h2>Juega el tutorial (unos 4 minutos)</h2>
           <p>Andy te va guiando paso a paso. Cuando termines, vuelve aquí para contarnos cómo te fue.</p>
           <div id="juego_zona">
-            ${esMovil
+            ${esMovil()
               ? `<a class="btn primario grande" style="display:block;text-align:center;text-decoration:none" href="${url}" target="luduscog_demo" rel="opener">Abrir el juego</a>
                  <p style="margin-top:10px;font-size:13px">Se abre en otra pestaña. Al terminar, pulsa «Volver a la encuesta» en el juego o regresa a esta pestaña.</p>`
-              : `<div class="juego"><iframe src="${url}" allow="autoplay" title="Tutorial de Lúcida"></iframe></div>`}
+              : `<div class="juego"><iframe src="${url}" allow="autoplay; fullscreen" title="Tutorial de Lúcida"></iframe></div>
+                 <div class="juego-acciones"><a href="${url}" target="luduscog_demo" rel="opener">¿Se ve pequeño? Ábrelo en una pestaña aparte ↗</a></div>`}
           </div>
           <div id="juego_listo" class="listo ${tutorialHecho ? '' : 'oculto'}" style="margin-top:12px">✓ ¡Tutorial completado! Ya puedes seguir.</div>
           <div class="botones">
@@ -231,6 +238,7 @@
   const cont = document.getElementById('paso')
   function pintar() {
     const p = PASOS[paso]
+    document.querySelector('.app').classList.toggle('ancho', p.id === 'jugar' && !esMovil())
     cont.innerHTML = ''
     p.render(cont)
     document.getElementById('barra').style.width = `${Math.round((paso / (PASOS.length - 1)) * 100)}%`
@@ -279,7 +287,7 @@
     const fila = {
       canal, rol: R.rol === 'Otro' && R.rol_otro ? `Otro: ${R.rol_otro}` : R.rol,
       respuestas: R, tutorial_completado: !!tutorialHecho,
-      segundos: Math.round((Date.now() - inicio) / 1000), dispositivo: esMovil ? 'movil' : 'escritorio'
+      segundos: Math.round((Date.now() - inicio) / 1000), dispositivo: esMovil() ? 'movil' : 'escritorio'
     }
     try {
       if (!CFG.SUPABASE_URL || CFG.SUPABASE_URL.includes('TU-PROYECTO')) throw new Error('Falta configurar Supabase en config.js')
@@ -297,6 +305,8 @@
     }
   }
 
+  let ancho0 = window.innerWidth
+  window.addEventListener('resize', () => { if (PASOS[paso].id === 'jugar' && Math.abs(window.innerWidth - ancho0) > 120) { ancho0 = window.innerWidth; pintar() } })
   pintar()
 })()
 </script>
