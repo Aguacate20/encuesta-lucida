@@ -159,13 +159,14 @@
         const jugo = tutorialHecho
         el.innerHTML = `<span class="eyebrow">4 · Después de jugar</span>
           ${jugo ? '' : `${unica('porque_no_jugo', '¿Por qué no pudiste jugar?', ['No cargó', 'No entendí cómo empezar', 'No tuve tiempo', 'No me interesó'])}`}
+          ${jugo ? unica('donde_jugo', '¿En qué jugaste el tutorial?', ['En el celular', 'En el computador', 'En una tableta']) : ''}
           ${jugo ? escala('entendi', '¿Entendiste qué tenías que hacer?', 'Nada', 'Perfectamente') : ''}
           ${jugo ? escala('divertido', '¿Qué tan divertido te pareció?', 'Nada', 'Mucho') : ''}
           ${jugo ? escala('aprendi', '¿Sentiste que aprendías mientras jugabas?', 'Nada', 'Mucho') : ''}
           ${escala('util', esDocente() ? 'Con tus propios materiales, ¿qué tan útil sería para tu clase?' : 'Con tus propios textos y materias, ¿qué tan útil te sería?', 'Nada útil', 'Muy útil')}
           ${unica('usaria', esDocente() ? '¿La usarías en tu clase o institución?' : '¿La usarías para estudiar tus materias?', ['Sí', 'Tal vez', 'No'])}
           ${botones()}` },
-      ok: () => R.util && R.usaria && (tutorialHecho ? R.entendi && R.divertido && R.aprendi : R.porque_no_jugo) },
+      ok: () => R.util && R.usaria && (tutorialHecho ? R.donde_jugo && R.entendi && R.divertido && R.aprendi : R.porque_no_jugo) },
 
     { id: 'abiertas', render: (el) => {
         el.innerHTML = `<span class="eyebrow">5 · Con tus palabras</span>
