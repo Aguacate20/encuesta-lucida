@@ -183,7 +183,7 @@
           ${cop('precio_bueno', '¿Qué precio mensual te parecería una buena oferta?')}
           ${cop('precio_caro', '¿A partir de qué precio mensual te empezaría a parecer cara, aunque aún la considerarías?')}
           ${cop('precio_demasiado', '¿A qué precio mensual te parecería demasiado cara y no la comprarías?')}
-          ${unica('forma_pago', '¿Cómo preferirías pagar?', ['Suscripción mensual', 'Pago por semestre', 'Paquete por materia o curso', 'Que pague mi institución'])}
+          ${unica('forma_pago', '¿Cómo preferirías pagar?', ['Suscripción mensual', 'Suscripción anual', 'Pago por semestre', 'Paquete por materia o curso', 'Que pague mi institución'])}
           ${esDocente() ? unica('decide', '¿Quién decide la compra de herramientas digitales en tu institución?', ['Yo mismo', 'Coordinación académica', 'Rectoría o dirección', 'Un comité o área de tecnología', 'No sé']) : ''}
           ${botones()}` },
       ok: () => R.forma_pago && (!esDocente() || R.decide) },
@@ -229,7 +229,7 @@
       `<button type="button" class="${R[clave] === n ? 'activa' : ''}" data-escala="${clave}" data-v="${n}">${n}</button>`).join('')}</div>`
   }
   function cop(clave, texto) {
-    return `<div class="pregunta">${texto}</div><div class="cop"><input type="number" inputmode="numeric" min="0" step="1000" placeholder="Ej. 15000" value="${R[clave] ?? ''}" oninput="R_set('${clave}', this.value ? Number(this.value) : undefined)"><span>COP / mes</span></div>`
+    return `<div class="pregunta">${texto}</div><div class="cop"><input type="number" inputmode="numeric" min="0" step="1000" placeholder="Ej. 30000" value="${R[clave] ?? ''}" oninput="R_set('${clave}', this.value ? Number(this.value) : undefined)"><span>COP / mes</span></div>`
   }
   function botones() { return `<div class="botones"><button class="btn fantasma" data-ant>Atrás</button><button class="btn primario" data-sig>Seguir</button></div>` }
   window.R_set = (k, v) => { R[k] = v }
